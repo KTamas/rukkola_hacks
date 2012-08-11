@@ -29,7 +29,7 @@ function add_next(url) {
   var next_page = parseInt(current_page)+1;
   $("#more_books").remove();
   if (next_page <= pages) {
-    $("#all_books").append('<a href="javascript:window.postMessage({ get_next: ' + next_page + '}, \'*\')" id="more_books">Tovább...</a>');
+    $("#all_books").append('<a href="javascript:more(' + next_page + ')" id="more_books">Tovább...</a>');
   }
 }
 
@@ -57,13 +57,3 @@ if (pages > 1) {
   $("nav").hide();
   add_next("");
 }
-
-var port = chrome.extension.connect();
-window.addEventListener("message", function(event) {
-    // We only accept messages from ourselves
-    if (event.source != window)
-      return;
-    if (event.data.get_next) {
-      more(event.data.get_next);
-    }
-}, false);
