@@ -43,9 +43,10 @@ function more(page) {
   });
 }
 
-var pages = parseInt($(".last a").attr('href').match(/[0-9]+/)[0]);
-
-if (pages > 1) {
-  $("nav").hide();
-  add_next(null);
+if (window.location.pathname.indexOf('kollekciok') > -1) {
+  var pages = parseInt($(".last a").attr('href').match(/[0-9]+/)[0]);
+  if (pages > 1) {
+    $("nav").hide();
+    add_next(null);
+  }
 }
