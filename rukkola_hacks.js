@@ -37,7 +37,11 @@ function add_next(url) {
 
 function more(page) {
   url = window.location.origin + window.location.pathname + "?oldal=" + page;
-  $.get(url, function(data) {
+  $.ajax({
+    url: url,
+    type: "GET",
+    beforeSend: function() { $("#hacksmore").html("<b>Töltöm...</b>"); }
+  }).done(function(data) {
     $(data).find(".book_box").each(function(i, el) {
       $("#hacks").append(el);
     });
@@ -48,12 +52,13 @@ function more(page) {
 
 cleanup();
 reorganize();
+
 var pages = parseInt($(".last a").attr('href').match(/[0-9]+/)[0]);
 
 if (pages > 1) {
+  $("nav").hide();
   add_next("");
 }
-
 
 var port = chrome.extension.connect();
 window.addEventListener("message", function(event) {
