@@ -34,7 +34,7 @@ function add_next(url) {
 }
 
 function more(page) {
-  // stupid firefox
+  // note to self: firefox doesn't support window.location.origin, but fortunatelly we don't need it
   url = window.location.pathname + "?oldal=" + page;
   $.ajax({
     url: url,
