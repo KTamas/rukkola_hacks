@@ -1,12 +1,9 @@
 function cleanup() {
-  $(".container").each(function(i, el) {
-    rnh = $(el).find(".rukknhapp"); 
-
-    if ((rnh.children().size() === 0) || (rnh.text().indexOf("happolná") > 0)) {
-      $(el).parent().remove();
+  $(".container .rukknhapp").each(function(i, el) {
+    if (($(el).text().trim() === "") || ($(el).text().indexOf("happolná") > 0)) {
+      $(el).parent().parent().parent().remove();
     }
-
-    $(el).css('padding-left', '0').css('margin-right', '10px');
+    $('.container').css('padding-left', '0').css('margin-right', '10px');
   });
 }
 
