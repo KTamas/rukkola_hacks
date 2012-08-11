@@ -34,7 +34,8 @@ function add_next(url) {
 }
 
 function more(page) {
-  url = window.location.origin + window.location.pathname + "?oldal=" + page;
+  // stupid firefox
+  url = window.location.pathname + "?oldal=" + page;
   $.ajax({
     url: url,
     type: "GET",
