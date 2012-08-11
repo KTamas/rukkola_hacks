@@ -29,7 +29,7 @@ function add_next(url) {
   var next_page = parseInt(current_page)+1;
   $("#more_books").remove();
   if (next_page <= pages) {
-    $("#all_books").append('<a href="javascript:more(' + next_page + ')" id="more_books">Tovább...</a>');
+    $("#all_books").append('<a href="javascript:more(' + next_page + ')" id="more_books">Tovább (' + current_page + '/' + pages + ')</a>');
   }
 }
 
@@ -38,7 +38,7 @@ function more(page) {
   $.ajax({
     url: url,
     type: "GET",
-    beforeSend: function() { $("#more_books").html("<b>Töltöm...</b>"); }
+    beforeSend: function() { $("#more_books").html("Töltöm..."); }
   }).done(function(data) {
     $(data).find(".book_box").each(function(i, el) {
       $("#all_books").append(el);
