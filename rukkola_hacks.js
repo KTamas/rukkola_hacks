@@ -6,14 +6,12 @@ function cleanup() {
       $(el).parent().remove();
     }
 
-    $(el).css('padding-left', '0');
-    $(el).css('margin-right', '10px');
-
+    $(el).css('padding-left', '0').css('margin-right', '10px');
   });
 }
 
 function reorganize() {
-  $("#books").prepend('<div class="grid-full book" id="hacks"></div>');
+  $("#books").prepend('<div class="grid-full book" id="all_books"></div>');
   var stuff = []
 
   $("#books").find(".book_box").each(function(i, el) {
@@ -22,16 +20,16 @@ function reorganize() {
   });
 
   stuff.forEach(function(el, i) {
-    $("#hacks").append(el);
+    $("#all_books").append(el);
   });
 }
 
 function add_next(url) {
-  var cp = url === "" ? 1 : url.match(/[0-9]+/)[0];
-  var np = parseInt(cp)+1;
-  $("#hacksmore").remove();
-  if (np <= pages) {
-    $("#hacks").append('<a href="javascript:window.postMessage({ get_next: ' + np + '}, \'*\')" id="hacksmore">Tovább...</a>');
+  var current_page = url === "" ? 1 : url.match(/[0-9]+/)[0];
+  var next_page = parseInt(current_page)+1;
+  $("#more_books").remove();
+  if (next_page <= pages) {
+    $("#all_books").append('<a href="javascript:window.postMessage({ get_next: ' + next_page + '}, \'*\')" id="more_books">Tovább...</a>');
   }
 }
 
@@ -40,10 +38,10 @@ function more(page) {
   $.ajax({
     url: url,
     type: "GET",
-    beforeSend: function() { $("#hacksmore").html("<b>Töltöm...</b>"); }
+    beforeSend: function() { $("#more_books").html("<b>Töltöm...</b>"); }
   }).done(function(data) {
     $(data).find(".book_box").each(function(i, el) {
-      $("#hacks").append(el);
+      $("#all_books").append(el);
     });
     cleanup();
     add_next(url);
