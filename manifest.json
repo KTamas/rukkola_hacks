@@ -1,8 +1,8 @@
 {
-  "name": "Rukkola hacks",
-  "version": "1.0",
+  "name": "Alternatív rukkola.hu kollekcióböngészés",
+  "version": "0.0.1",
   "manifest_version": 2,
-  "description": "Insert witty description here.",
+  "description": "A script elrejti a nem rukkolható könyveket a kollekciók böngészésénél, illetve a többoldalas navigációt lecseréli egy Tovább gombra ami betölti a következő oldalról a fenti kritériának megfelelő könyveket.",
   "permissions": ["http://*.rukkola.hu/kollekciok/*", "tabs"],
   "content_scripts": [{
     "matches": ["http://*.rukkola.hu/kollekciok/*"],
