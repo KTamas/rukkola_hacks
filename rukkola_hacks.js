@@ -29,7 +29,7 @@ function add_next(url) {
   var next_page = parseInt(current_page)+1;
   $("#more_books").remove();
   if (next_page <= pages) {
-    $("#all_books").append('<a href="javascript:more(' + next_page + ')" id="more_books">Tovább (' + current_page + '/' + pages + ')</a>');
+    $("#all_books").append('<a href="javascript:more(' + next_page + ')" id="more_books">Tovább (' + next_page + '/' + pages + ')</a>');
   }
 }
 
