@@ -1,0 +1,11 @@
+{
+  "name": "Rukkola hacks",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "Insert witty description here.",
+  "permissions": ["http://*.rukkola.hu/kollekciok/*", "tabs"],
+  "content_scripts": [{
+    "matches": ["http://*.rukkola.hu/kollekciok/*"],
+    "js": ["jquery.js", "rukkola_hacks.js"]
+  }]
+}
