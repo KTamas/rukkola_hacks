@@ -39,6 +39,8 @@
     $("#loading").remove();
     if (next_page) {
       $("#all_books").append("<div id='loading' style='display: none;'><b>Töltöm (" + next_page + "/" + page_count + ") </b></div>");
+    } else {
+      $("#all_books").append("<div style='clear: both;'><b>Itt a vége, fuss el véle.</b></div>");
     }
   }
 
