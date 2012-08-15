@@ -21,42 +21,51 @@ function reorganize() {
 cleanup();
 reorganize();
 
-var pages;
+var page_count, current_page, next_page, loading;
 
 if ((window.location.pathname.indexOf('kollekciok') > -1) && ($('nav').size() > 0)) {
-  pages = parseInt($(".last a").attr('href').match(/[0-9]+/)[0], 10);
+  page_count = parseInt($(".last a").attr('href').match(/[0-9]+/)[0], 10);
 } else {
-  pages = 0;
+  page_count = 0;
   window.scrollTo.apply(window, [0, 0]); //window.scrollTo(0) doesn't work in firefox
 }
 
-function add_next(url) {
-  var current_page, next_page;
+function set_next(url) {
   current_page = url === null ? 1 : parseInt(url.match(/[0-9]+/)[0], 10);
-  next_page = current_page + 1;
-  $("#more_books").remove();
-  if (next_page <= pages) {
-    $("#all_books").append('<a href="javascript:more(' + next_page + ')" id="more_books">Tovább (' + next_page + '/' + pages + ')</a>');
+  next_page = current_page === page_count ? null : current_page + 1;
+  $("#loading").remove();
+  if (next_page) {
+    $("#all_books").append("<div id='loading' style='display: none;'><b>Töltöm (" + next_page + "/" + page_count + ") </b></div>");
   }
 }
 
 function more(page) {
-  // note to self: firefox doesn't support window.location.origin, but fortunatelly we don't need it
+  loading = true;
   var url = window.location.pathname + "?oldal=" + page;
   $.ajax({
     url: url,
     type: "GET",
-    beforeSend: function () { $("#more_books").html("Töltöm..."); }
+    beforeSend: function () { $("#loading").show(); }
   }).done(function (data) {
     $(data).find(".book_box").each(function (i, el) {
       $("#all_books").append(el);
     });
     cleanup();
-    add_next(url);
+    set_next(url);
+    loading = false;
   });
 }
 
-if (pages > 1) {
+if (page_count > 1) {
   $("nav").hide();
-  add_next(null);
+  set_next(null);
 }
+
+$(window).scroll(function () {
+  if ($(window).scrollTop() >= ($(document).height() - $(window).height() - 200)) {
+    if ((!next_page) || (loading)) {
+      return false;
+    }
+    more(next_page);
+  }
+});
