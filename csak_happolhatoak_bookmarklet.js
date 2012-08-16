@@ -58,7 +58,7 @@
       cleanup();
       set_next(url);
       loading = false;
-      if (dh === $(document).height()) {
+      if ((dh === $(document).height()) && (next_page)) {
         more(next_page);
       }
     });
