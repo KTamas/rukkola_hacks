@@ -26,7 +26,7 @@
 
   var page_count, current_page, next_page, loading, dh;
 
-  if ((window.location.pathname.indexOf('kollekciok') > -1) && ($('nav').size() > 0)) {
+  if (((window.location.pathname.indexOf('kollekciok') > -1) || (window.location.pathname.indexOf('konyvek') > -1)) && ($('nav').size() > 0)) {
     page_count = parseInt($(".last a").attr('href').match(/[0-9]+/)[0], 10);
   } else {
     page_count = 0;
