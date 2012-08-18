@@ -27,7 +27,7 @@
   var page_count, current_page, next_page, is_loading;
 
   if (((window.location.pathname.indexOf('kollekciok') > -1) || (window.location.pathname.indexOf('konyvek') > -1)) && ($('nav').size() > 0)) {
-    page_count = parseInt($(".last a").attr('href').match(/[0-9]+/)[0], 10);
+    page_count = parseInt($(".last a").attr('href').match(/\?oldal=([\d]+)/)[1], 10);
   } else {
     page_count = 0;
     window.scrollTo.apply(window, [0, 0]); //window.scrollTo(0) doesn't work in firefox
@@ -38,7 +38,7 @@
   }
 
   function set_next(url) {
-    current_page = url === null ? 1 : parseInt(url.match(/[0-9]+/)[0], 10);
+    current_page = url === null ? 1 : parseInt(url.match(/\?oldal=([\d]+)/)[1], 10);
     next_page = current_page === page_count ? null : current_page + 1;
     $("#is_loading").remove();
     if (next_page) {
