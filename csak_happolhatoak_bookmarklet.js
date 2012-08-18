@@ -3,31 +3,27 @@
 
 (function () {
   "use strict";
+  
+  $("#books").prepend('<div id="all_books" class="grid-full book"></div>');
 
-  function cleanup() {
-    $(".container .rukknhapp").each(function (i, el) {
-      if ($(el).text().trim().indexOf('elérhető') === -1) {
-        $(el).parent().parent().parent().remove();
-      }
+  function add_happable_books_from(source) {
+    $(source).find(".book_box:contains('elérhető')").each(function (i, el) {
+      $("#all_books").append($(el).clone());
     });
     $('.container').css('padding-left', '0').css('margin-right', '10px');
   }
 
-  function reorganize() {
-    cleanup();
-    $("#books").prepend('<div class="grid-full book" id="all_books"></div>');
-    $("#books").find(".book_box").each(function (i, el) {
-      $("#all_books").append($(el).clone());
-      $(el).remove();
-    });
+  function setup() {
+    add_happable_books_from("#books");
+    $("div.grid-full.book").not("#all_books").remove();
   }
 
-  reorganize();
+  setup();
 
   var page_count, current_page, next_page, is_loading;
 
-  if (((window.location.pathname.indexOf('kollekciok') > -1) || (window.location.pathname.indexOf('konyvek') > -1)) && ($('nav').size() > 0)) {
-    page_count = parseInt($(".last a").attr('href').match(/[0-9]+/)[0], 10);
+  if ($('nav').length > 0) {
+    page_count = parseInt($(".last a").attr('href').match(/\?oldal=([\d]+)/)[1], 10);
   } else {
     page_count = 0;
     window.scrollTo.apply(window, [0, 0]); //window.scrollTo(0) doesn't work in firefox
@@ -38,7 +34,7 @@
   }
 
   function set_next(url) {
-    current_page = url === null ? 1 : parseInt(url.match(/[0-9]+/)[0], 10);
+    current_page = url === null ? 1 : parseInt(url.match(/\?oldal=([\d]+)/)[1], 10);
     next_page = current_page === page_count ? null : current_page + 1;
     $("#is_loading").remove();
     if (next_page) {
@@ -56,10 +52,7 @@
       type: "GET",
       beforeSend: function () { $("#is_loading").show(); }
     }).done(function (data) {
-      $(data).find(".book_box").each(function (i, el) {
-        $("#all_books").append(el);
-      });
-      cleanup();
+      add_happable_books_from(data);
       set_next(url);
       is_loading = false;
       if ((previous_document_height === $(document).height() && next_page) || (!is_window_scrollable() && next_page)) {
