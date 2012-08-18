@@ -5,11 +5,7 @@
   "use strict";
 
   function cleanup() {
-    $(".container .rukknhapp").each(function (i, el) {
-      if ($(el).text().trim().indexOf('elérhető') === -1) {
-        $(el).parent().parent().parent().remove();
-      }
-    });
+    $(".book_box").not(':contains("elérhető")').remove();
     $('.container').css('padding-left', '0').css('margin-right', '10px');
   }
 
