@@ -4,6 +4,15 @@
 (function () {
   "use strict";
 
+  function messagebox(msg) {
+    document.body.innerHTML = "<div id='outer' style='z-index: 100; position: fixed; top: 33%; height: 1px; left: 0px; right: 0px; overflow: visible;'>" + "<div id='inner' style='z-index: 100; position: absolute; width: 200px; height: 50px; left: 50%; margin-left: -100px; top: -50px; background-color: black; color: white; padding: 5px; text-align: left;'>" + msg + " (<a style=\"color: #f37900\" href='#' onclick='javascript:document.querySelector(\"#outer\").innerHTML=null;' style=\"color: #f37900\">bezár</a>)</div></div>" + document.body.innerHTML;
+  }
+
+  if (window.location.hostname.indexOf('rukkola.hu') < 0) {
+    messagebox("Szia, ezt a bookmarkletet csak a rukkolan hasznalhatod. Kattints <a href='foo'>ide</a> tovabbi infoert. Kofi!");
+    return false;
+  }
+
   function add_happable_books_from(source) {
     $(source).find(".book_box:contains('elérhető')").each(function (i, el) {
       $("#all_books").append($(el).clone());
@@ -19,12 +28,14 @@
 
   var page_count, initial_page, next_page, is_loading;
 
-  if ($('nav').length > 0) {
+  if (window.location.pathname !== "/") {
     transform_grid();
-    initial_page = parseInt($('span.page.current').text(), 10);
-    next_page = initial_page + 1;
-    page_count = parseInt($(".last a").attr('href').match(/\?oldal=([\d]+)/)[1], 10);
-    $("nav").hide();
+    if ($('nav').length > 0) {
+      initial_page = parseInt($('span.page.current').text(), 10);
+      next_page = initial_page + 1;
+      page_count = parseInt($(".last a").attr('href').match(/\?oldal=([\d]+)/)[1], 10);
+      $("nav").hide();
+    }
   } else {
     $(".book_box").not(':contains("elérhető")').remove();
     window.scrollTo.apply(window, [0, 0]); //window.scrollTo(0) doesn't work in firefox
