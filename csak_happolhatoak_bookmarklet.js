@@ -4,12 +4,13 @@
 (function () {
   "use strict";
 
-  function messagebox(msg) {
-    document.body.innerHTML = "<div id='outer' style='z-index: 100; position: fixed; top: 33%; height: 1px; left: 0px; right: 0px; overflow: visible;'>" + "<div id='inner' style='z-index: 100; position: absolute; width: 200px; height: 50px; left: 50%; margin-left: -100px; top: -50px; background-color: black; color: white; padding: 5px; text-align: left;'>" + msg + " (<a style=\"color: #f37900\" href='#' onclick='javascript:document.querySelector(\"#outer\").innerHTML=null;' style=\"color: #f37900\">bezár</a>)</div></div>" + document.body.innerHTML;
+  if (window.location.href === 'http://blog.ktamas.com/index.php/rukkola-bookmarklet/') {
+    window.alert("A telepítéshez add hozzá a bookmarkletet a bookmark barhoz.");
+    return false;
   }
 
   if (window.location.hostname.indexOf('rukkola.hu') < 0) {
-    messagebox("Szia, ezt a bookmarkletet csak a rukkolan hasznalhatod. Kattints <a href='foo'>ide</a> tovabbi infoert. Kofi!");
+    window.alert("Ezt a bookmarkletet csak a rukkolán használhatod.");
     return false;
   }
 
@@ -64,13 +65,13 @@
         $("#all_books").append("<div style='clear: both;'><b>Itt a vége, fuss el véle.</b></div>");
       }
       if ((previous_document_height === $(document).height() || !is_window_scrollable()) && next_page) {
-        load_more(next_page);
+        load_more();
       }
     });
   }
 
   if (!is_window_scrollable() && next_page) {
-    load_more(next_page);
+    load_more();
   }
 
   $(window).scroll(function () {
@@ -78,7 +79,7 @@
       if ((!next_page) || (is_loading)) {
         return false;
       }
-      load_more(next_page);
+      load_more();
     }
   });
 }());
