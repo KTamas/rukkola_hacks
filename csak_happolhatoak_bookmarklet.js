@@ -72,7 +72,7 @@
     return window.alert("Ezt a bookmarkletet csak a rukkolán használhatod.");
   }
 
-  if (window.location.pathname === "/" || window.location.pathname === "/konyvek/kereses") {
+  if (window.location.pathname.match("/(konyvek/kereses)?")) {
     $(".book_box").not(':contains("elérhető")').remove();
     window.scrollTo.apply(window, [0, 0]);
     return false;
