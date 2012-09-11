@@ -5,7 +5,7 @@
   "use strict";
 
   function cleanup() {
-    $(".book_box").not(':contains("elérhető")').remove();
+    $(".book_box").not(':contains("azonnal happolható")').remove();
     $('.container').css('padding-left', '0').css('margin-right', '10px');
   }
 
