@@ -1,83 +1,82 @@
 /*jslint browser: true, indent: 2 */
-/*global jQuery, $ */
+/*global jQuery, $, console */
 
 (function () {
   "use strict";
 
-  function cleanup() {
-    $(".book_box").not(':contains("azonnal happolható")').remove();
-    $('.container').css('padding-left', '0').css('margin-right', '10px');
-  }
+  var page_count, initial_page, next_page, is_loading;
 
-  function reorganize() {
-    cleanup();
-    $("#books").prepend('<div class="grid-full book" id="all_books"></div>');
-    $("#books").find(".book_box").each(function (i, el) {
+  function add_happable_books_from(source) {
+    $(source).find(".book_box:contains('azonnal happolható')").each(function (i, el) {
       $("#all_books").append($(el).clone());
-      $(el).remove();
     });
-  }
-
-  reorganize();
-
-  var page_count, current_page, next_page, is_loading;
-
-  if (((window.location.pathname.indexOf('kollekciok') > -1) || (window.location.pathname.indexOf('konyvek') > -1)) && ($('nav').size() > 0)) {
-    page_count = parseInt($(".last a").attr('href').match(/\?oldal=([\d]+)/)[1], 10);
-  } else {
-    page_count = 0;
-    window.scrollTo.apply(window, [0, 0]); //window.scrollTo(0) doesn't work in firefox
+    $(".container").css("padding-left", "0").css("margin-right", "10px");
   }
 
   function is_window_scrollable() {
     return document.body.scrollHeight > (document.body.clientHeight + 300);
   }
 
-  function set_next(url) {
-    current_page = url === null ? 1 : parseInt(url.match(/\?oldal=([\d]+)/)[1], 10);
-    next_page = current_page === page_count ? null : current_page + 1;
-    $("#is_loading").remove();
-    if (next_page) {
-      $("#all_books").append("<div id='is_loading' style='display: none;'><b>Töltöm (" + next_page + "/" + page_count + ") </b></div>");
-    } else {
-      $("#all_books").append("<div style='clear: both;'><b>Itt a vége, fuss el véle.</b></div>");
-    }
-  }
-
-  function load_more(page) {
+  function load_more() {
     is_loading = true;
-    var url = window.location.pathname + "?oldal=" + page, previous_document_height = $(document).height();
+    var previous_document_height = $(document).height();
     $.ajax({
-      url: url,
+      url: window.location.pathname + "?oldal=" + next_page,
       type: "GET",
-      beforeSend: function () { $("#is_loading").show(); }
+      beforeSend: function () {
+        $("#all_books").append("<div id='loading'><b>Töltöm (" + next_page + "/" + page_count + ") </b></div>");
+      }
     }).done(function (data) {
-      $(data).find(".book_box").each(function (i, el) {
-        $("#all_books").append(el);
-      });
-      cleanup();
-      set_next(url);
+      add_happable_books_from(data);
+      $("#loading").remove();
       is_loading = false;
-      if ((previous_document_height === $(document).height() && next_page) || (!is_window_scrollable() && next_page)) {
-        load_more(next_page);
+      next_page = next_page < page_count ? next_page + 1 : null;
+      if (!next_page) {
+        $("#all_books").append("<div style='clear: both;'><b>Itt a vége, fuss el véle.</b></div>");
+      }
+      if ((previous_document_height === $(document).height() || !is_window_scrollable()) && next_page) {
+        load_more();
       }
     });
   }
 
-  if (page_count > 1) {
-    $("nav").hide();
-    set_next(null);
+  function setup() {
+    $("#books").prepend("<div id='all_books' class='grid-full book'></div>");
+    add_happable_books_from("#books");
+    $("div.grid-full.book").not("#all_books").remove();
+    if ($("nav").length > 0) {
+      initial_page = parseInt($("span.page.current").text(), 10);
+      next_page = initial_page + 1;
+      page_count = parseInt($(".last a").attr("href").match(/\?oldal=([\d]+)/)[1], 10);
+      $("nav").hide();
+      $(window).scroll(function () {
+        if ($(window).scrollTop() >= ($(document).height() - $(window).height() - 250)) {
+          if ((!next_page) || (is_loading)) {
+            return false;
+          }
+          load_more();
+        }
+      });
+    }
+    window.scrollTo.apply(window, [0, 0]);
     if (!is_window_scrollable() && next_page) {
-      load_more(next_page);
+      load_more();
     }
   }
 
-  $(window).scroll(function () {
-    if ($(window).scrollTop() >= ($(document).height() - $(window).height() - 250)) {
-      if ((!next_page) || (is_loading)) {
-        return false;
-      }
-      load_more(next_page);
-    }
-  });
+  if (window.location.href === "http://blog.ktamas.com/index.php/rukkola-bookmarklet/") {
+    return window.alert("A telepítéshez add hozzá a bookmarkletet a bookmark barhoz.");
+  }
+
+  if (window.location.hostname.indexOf("rukkola.hu") < 0) {
+    return window.alert("Ezt a bookmarkletet csak a rukkolán használhatod.");
+  }
+
+  if (window.location.pathname === '/' || window.location.pathname === '/konyvek/kereses') {
+    $(".book_box").not(':contains("azonnal happolható")').remove();
+    window.scrollTo.apply(window, [0, 0]);
+    return false;
+  }
+
+  setup();
 }());
