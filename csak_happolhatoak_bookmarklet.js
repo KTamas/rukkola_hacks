@@ -7,7 +7,7 @@
   var page_count, initial_page, next_page, is_loading;
 
   function add_happable_books_from(source) {
-    $(source).find(".book_box:contains('elérhető')").each(function (i, el) {
+    $(source).find(".book_box:contains('azonnal happolható')").each(function (i, el) {
       $("#all_books").append($(el).clone());
     });
     $(".container").css("padding-left", "0").css("margin-right", "10px");
@@ -72,8 +72,8 @@
     return window.alert("Ezt a bookmarkletet csak a rukkolán használhatod.");
   }
 
-  if (window.location.pathname.match("/(konyvek/kereses)?")) {
-    $(".book_box").not(':contains("elérhető")').remove();
+  if (window.location.pathname === '/' || window.location.pathname === '/konyvek/kereses') {
+    $(".book_box").not(':contains("azonnal happolható")').remove();
     window.scrollTo.apply(window, [0, 0]);
     return false;
   }
